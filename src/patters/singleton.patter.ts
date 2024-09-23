@@ -35,7 +35,7 @@ export class Inventario {
     this.equipos.push({ nombre, tipo, estado });
   }
 
-  public mostrarEquipos(): Equipo[] {
+  public listarEquipos(): Equipo[] {
     return this.equipos;
   }
 }

@@ -1,33 +1,42 @@
+// Interfaz Observador
 interface Observador {
-  actualizar(salario: number): void;
+  notificar(equipo: Equipo, nuevoEstado: string): void;
 }
 
-class Empleado implements Observador {
-  constructor(private nombre: string) {}
-
-  actualizar(salario: number): void {
-      console.log(`${this.nombre} ha sido notificado. Nuevo salario: ${salario}`);
+// Clase que actúa como Observador (Soporte)
+export class Soporte implements Observador {
+  notificar(equipo: Equipo, nuevoEstado: string): void {
+    console.log(
+      `Soporte notificado: ${equipo.nombre} ha cambiado su estado a ${nuevoEstado}.`
+    );
   }
 }
 
-export class AdministradorDeSalarios {
+// Clase Observable (Equipo)
+export class Equipo {
   private observadores: Observador[] = [];
-  private salario: number = 0;
 
+  constructor(
+    public nombre: string,
+    public tipo: string,
+    private estado: string
+  ) {}
+
+  // Método para agregar un observador
   agregarObservador(observador: Observador): void {
-      this.observadores.push(observador);
+    this.observadores.push(observador);
   }
 
-  eliminarObservador(observador: Observador): void {
-      this.observadores = this.observadores.filter(obs => obs !== observador);
+  // Método para cambiar el estado y notificar a los observadores
+  cambiarEstado(nuevoEstado: string): void {
+    this.estado = nuevoEstado;
+    this.notificarObservadores(nuevoEstado);
   }
 
-  cambiarSalario(nuevoSalario: number): void {
-      this.salario = nuevoSalario;
-      this.notificarObservadores();
-  }
-
-  private notificarObservadores(): void {
-      this.observadores.forEach(obs => obs.actualizar(this.salario));
+  // Notificar a todos los observadores
+  private notificarObservadores(nuevoEstado: string): void {
+    for (const observador of this.observadores) {
+      observador.notificar(this, nuevoEstado);
+    }
   }
 }

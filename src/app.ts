@@ -1,25 +1,34 @@
 import { Inventario } from "./patters/singleton.patter";
-import { Tienda} from "./patters/factory-method.patter";
-import { AdministradorDeSalarios} from "./patters/observer.patter";
+import {EquipoFactory} from "./patters/factory-method.patter";
+import { Soporte, Equipo} from "./patters/observer.patter";
+import { InventarioViejo, AdaptadorInventario} from "./patters/adaptador.patter";
 
 //Patron Singletón
 const inventario = Inventario.obtenerInstancia();
 
 inventario.agregarEquipo("iPhone 14", "Smartphone", "disponible");
 console.log("Patron Singletón-------------------------");
-console.log(inventario.mostrarEquipos());
+console.log(inventario.listarEquipos());
 
 // //Patron Factory Method
 console.log("Patron Factory-------------------------");
-const tienda = new Tienda();
-tienda.crearProducto('digital', 'Software XYZ');
-tienda.mostrarProductos();
+const factory = new EquipoFactory();
+const Notebook = factory.crearEquipo("Servidor", "Dell XPS", "16GB", "i7");
+console.log(Notebook.getInfo());
 
-// //Metodo Observer
-const adminSalarios = new AdministradorDeSalarios();
-adminSalarios.agregarObservador("Axel")
-adminSalarios.agregarObservador("Bresanovich");
+// //Patron Observer
+console.log("Patron observer-------------------------");
 
-adminSalarios.cambiarSalario(60000);
+const soporte = new Soporte();
+const equipo = new Equipo("Notebook HP", "Portátil", "disponible");
+equipo.agregarObservador(soporte);
+equipo.cambiarEstado("en reparación");
+// Soporte notificado: Notebook HP ha cambiado su estado a en reparación.
 
-// console.log("Patron Adaptador-------------------------");
+// Patrón Adaptador
+console.log("Patron adaptador-------------------------");
+const inventarioViejo = new InventarioViejo();
+const adaptador = new AdaptadorInventario(inventarioViejo);
+adaptador.agregarEquipo("Servidor Dell", "Servidor", "disponible");
+console.log(adaptador.listarEquipos());
+

@@ -1,60 +1,57 @@
-interface Producto {
-  calcularPrecio(): number;
-  getInfo(): { nombre: string; tipo: string; estado: string }; // Método para obtener información del producto
+interface Equipo {
+  getInfo(): { nombre: string; tipo: string, ram: string, procesador:string }; 
 }
 
-class ProductoFisico implements Producto {
-  private costo: number;
-
-  constructor(private nombre: string) {
-    this.costo = 100; // Precio base para este ejemplo
-  }
-
-  calcularPrecio(): number {
-    return this.costo + 10; // Costo más una tarifa de envío fija
-  }
+// Clase específica para Notebook
+class Notebook implements Equipo {
+  constructor(private nombre: string, private ram: string, private procesador: string) {}
 
   getInfo() {
-    return { nombre: this.nombre, tipo: 'Producto Físico', estado: 'disponible' };
+    return { nombre: this.nombre, tipo: 'Notebook', ram: this.ram, procesador: this.procesador };
   }
 }
 
-class ProductoDigital implements Producto {
-  private costo: number;
-
-  constructor(private nombre: string) {
-    this.costo = 50; // Precio base para este ejemplo
-  }
-
-  calcularPrecio(): number {
-    return this.costo; // No tiene costo de envío
-  }
+// Clase específica para Desktop
+class Desktop implements Equipo {
+  constructor(private nombre: string, private ram: string, private procesador: string) {}
 
   getInfo() {
-    return { nombre: this.nombre, tipo: 'Producto Digital', estado: 'disponible' };
+    return { nombre: this.nombre, tipo: 'Desktop', ram: this.ram, procesador: this.procesador };
   }
 }
 
-export class Tienda {
-  private productos: Producto[] = []; // Array para almacenar productos
+// Clase específica para Servidor
+class Servidor implements Equipo {
+  constructor(private nombre: string, private ram: string, private procesador: string) {}
 
-  public crearProducto(tipo: string, nombre: string): Producto {
-    let producto: Producto;
+  getInfo() {
+    return { nombre: this.nombre, tipo: 'Servidor', ram: this.ram, procesador: this.procesador };
+  }
+}
 
-    if (tipo === 'fisico') {
-      producto = new ProductoFisico(nombre);
-    } else if (tipo === 'digital') {
-      producto = new ProductoDigital(nombre);
-    } else {
+export class EquipoFactory {
+  private equipos: Equipo[] = []; // Array para almacenar equipos
+
+  public crearEquipo(tipo: string, nombre: string, ram:string, procesador:string): Equipo {
+    let equipo: Equipo;
+
+    if (tipo === 'Notebook') {
+      equipo = new Notebook(nombre, ram,  procesador);
+    } else if(tipo==="Desktop"){
+      equipo = new Desktop(nombre, ram, procesador);
+    }else if (tipo==="Servidor"){
+      equipo = new Servidor(nombre, ram, procesador);   
+    }
+    else {
       throw new Error('Tipo de producto no reconocido');
     }
 
-    this.productos.push(producto); // Añadir el producto al array
-    return producto; // Devolver el producto creado
+    this.equipos.push(equipo); // Añadir el equipo al array
+    return equipo; // Devolver el equipo creado
   }
 
-  public mostrarProductos(): void {
-    const infoProductos = this.productos.map(producto => producto.getInfo());
-    console.log(infoProductos);
+  public detalles(): void {
+    const infoEquipos = this.equipos.map(equipo => equipo.getInfo());
+    console.log(infoEquipos);
   }
 }
